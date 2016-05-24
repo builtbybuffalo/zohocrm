@@ -65,6 +65,32 @@ abstract class Element
      * @todo
     - Verify if the property exist on entity before send to zoho
      */
+    final public function serializeXmlNoCase(array $fields)
+    {
+        $output = '<Lead>';
+        foreach ($fields as $key => $value) {
+            if (empty($value)) {
+                continue;
+            }
+            // Unnecessary fields
+            $key = str_replace(' ', '_', str_replace(['_', '$', '%5F', '?'], [' ', 'N36', 'E5F', '98T'], $key));
+            $output .= '<' . $key . '>' . htmlspecialchars($value) . '</' . $key . '>';
+        }
+        $output .= '</Lead>';
+
+        return $output;
+    }
+
+    /**
+     * Called during array to xml parsing, create an string
+     * of the xml to send for api based on the request values, for sustitution
+     * of specials chars use E prefix instead of % for hexadecimal
+     *
+     * @param array $fields Fields to convert
+     * @return string
+     * @todo
+    - Verify if the property exist on entity before send to zoho
+     */
     final public function serializeXml(array $fields)
     {
         $output = '<Lead>';
